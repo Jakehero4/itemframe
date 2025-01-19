@@ -27,14 +27,23 @@ h1 {
     line-height: 1;
     font-size: 10rem;
     text-align: center;
-    margin-bottom: -60px;
+    margin-bottom: -20px;
+}
+
+h3 {
+
+    font-size: 8rem;
+    margin-top: -40px;
+    margin-bottom: -25px;
+    text-decoration: underline;
+
 }
 
 /* Category section styling */
 .category {
     text-align: center;
     font-size: 4rem;
-    margin-top: 10px;
+    margin-top: 30px;
 }
 
 /* Category header styling */
@@ -49,30 +58,12 @@ h1 {
     line-height: 0.5; /* Adjust line-height to control text vertical alignment */
 }
 
-/* Item list styling */
+/* Style for the variety container */
 .item-list {
-    display: flex;
-    flex-wrap: wrap;
+    display: flex; /* Arrange varieties horizontally */
+    flex-wrap: wrap; /* Wrap to next line if space is tight */
+    margin-top: 30px;
     justify-content: center;
-    margin-top: 20px;
-    margin-bottom: 10px;
-}
-
-/* Style for item buttons */
-.item-button {
-    font-family: "Dongle", serif;
-    font-weight: 700;
-    font-style: normal;
-    font-size: 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    text-align: center;
-    transition: transform 0.3s ease;
 }
 
 /* Item images inside buttons */
@@ -85,18 +76,46 @@ h1 {
     pointer-events: none;
 }
 
-/* Hover effect for buttons */
+/* Smooth hover effect */
 .item-button:hover {
-    transform: scale(1.35); /* Slight zoom effect on hover */
+    transition: transform 0.3s ease; /* Smooth scaling transition */
+    transform: scale(1.2); /* Slightly enlarge on hover */
 }
 
-/* Style for item labels */
-.item-button span {
-    font-family: "Dongle", serif;
-    font-weight: 700;
-    font-style: normal;
-    font-size: 3rem; /* Adjust font size for better readability */
-    color: #333; /* Text color */
+/* Smooth unhover effect */
+.item-button:not(:hover) {
+    transition: transform 0.3s ease; /* Smooth scaling transition */
+    transform: scale(1); /* Reset to normal size on unhover */
+}
+
+/* Style for the variety container */
+.block-list {
+    display: flex; /* Arrange varieties horizontally */
+    flex-wrap: wrap; /* Wrap to next line if space is tight */
+    margin-top: 30px;
+    justify-content: center;
+}
+
+/* Item images inside buttons */
+.block-button img {
+    width: 128px;  /* Scale up the image to 128px */
+    height: auto; /* Scale up the image to 128px */
+    image-rendering: pixelated; /* Keeps the pixelated effect */
+    border-radius: 0; /* Remove any border radius to maintain sharp edges */
+    transition: transform 0.3s ease;
+    pointer-events: none;
+}
+
+/* Smooth hover effect */
+.block-button:hover {
+    transition: transform 0.3s ease; /* Smooth scaling transition */
+    transform: scale(1.2); /* Slightly enlarge on hover */
+}
+
+/* Smooth unhover effect */
+.block-button:not(:hover) {
+    transition: transform 0.3s ease; /* Smooth scaling transition */
+    transform: scale(1); /* Reset to normal size on unhover */
 }
 
 #led-display {
@@ -105,6 +124,7 @@ h1 {
     justify-content: center;
     align-items: center;
     margin: 50px; /* Adjust margin-top to control space from h1 */
+    box-shadow: 0px 0px 50px rgb(41, 41, 41);
     background-image: url('background.png');
     background-size: 100%; /* Slightly upscaled background */
     background-repeat: no-repeat;
@@ -118,31 +138,144 @@ h1 {
     width: 88%;
     height: auto; /* Allow height to adjust based on the width */
     cursor: pointer;
+    object-fit: contain;
+    transform: scale(0); /* Start with the image scaled down */
+    opacity: 1; /* Start with opacity 0 */
+    transition: transform 0.5s ease, opacity 0.5s ease; /* Smooth transition for both scaling and opacity */
+}
+
+#led-image.selected {
+    image-rendering: pixelated;
+    width: 88%;
+    height: auto; /* Allow height to adjust based on the width */
+    cursor: pointer;
+    object-fit: contain;
+    transform: scale(1);  /*Scale to full size when selected */
+    opacity: 1;  /*Make the image fully visible */
+    transition: transform 0.5s cubic-bezier(0.175, 1, 0.32, 2), opacity 0.5s cubic-bezier(0.175, 0.885, 0.32, 2); /* Smooth transition for both scaling and opacity */
+    animation: appear 0.5s ease forwards;
 }
 
 .item-button {
-    position: relative; /* Ensure the button is the reference point for positioning the checkmark */
+    will-change: transform;
+    image-rendering: pixelated;
+    display: inline-block;
+    padding: 5px;
+    margin: 0px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    transition: border 0.3s ease;
+    position: relative;
 }
 
+/* Checkmark styling */
 .item-button::after {
-    image-rendering: pixelated; /* Keeps the pixelated effect */
+    content: "";
+    will-change: transform;
+    position: absolute;
+    bottom: 0px; /* Position below the image */
+    left: 50%; /* Center horizontally */
+    width: 32px;
+    height: 32px;
+    background-image: url('checkmark.png'); /* Use your checkmark PNG */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 1; /* Initially visible */
+    transform: translateX(-50%) scale(1); /* Start with the checkmark scaled up */
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth scaling transition */
+}
+
+/* Hide checkmark when deselected */
+.item-button:not(.selected)::after {
+    will-change: transform;
+    opacity: 0; /* Hide the checkmark */
+    transform: translateX(-50%) scale(0); /* Scale the checkmark down */
+}
+
+.block-button {
+    image-rendering: pixelated;
+    display: inline-block;
+    padding: 5px;
+    margin: 0px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    transition: border 0.3s ease;
+    position: relative;
+}
+
+/* Checkmark styling */
+.block-button::after {
     content: "";
     position: absolute;
     bottom: 0px; /* Position below the image */
     left: 50%; /* Center horizontally */
     width: 32px;
     height: 32px;
-    background-image: url('checkmark.png');
+    background-image: url('checkmark.png'); /* Use your checkmark PNG */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    opacity: 1; /* Keep it visible */
-    transform: translateX(-50%) scale(0); /* Start with the checkmark scaled down */
+    opacity: 1; /* Initially visible */
+    transform: translateX(-50%) scale(1); /* Start with the checkmark scaled up */
     transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth scaling transition */
 }
 
-/* When an item button is selected, show the checkmark */
-.item-button.selected::after {
-    transform: translateX(-50%);
-    transition: transform 0.3s ease, opacity 0.3s ease;
+/* Hide checkmark when deselected */
+.block-button:not(.selected)::after {
+    opacity: 0; /* Hide the checkmark */
+    transform: translateX(-50%) scale(0); /* Scale the checkmark down */
+}
+
+/* Add new class to item-button when led-image is clicked */
+.led-image-clicked .item-button {
+    opacity: 0.5; /* Dim the item-button */
+    will-change: transform;
+}
+
+.led-image-clicked .item-button::after {
+    opacity: 0; /* Hide the checkmark */
+    transform: translateX(-50%) scale(0); /* Scale the checkmark down */
+    will-change: transform;
+}
+
+/* Add new class to item-button when led-image is clicked */
+.led-image-clicked .block-button {
+    opacity: 0.5; /* Dim the item-button */
+}
+
+.led-image-clicked .block-button::after {
+    opacity: 0; /* Hide the checkmark */
+    transform: translateX(-50%) scale(0); /* Scale the checkmark down */
+}
+
+#scroll-to-top {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000; /* Ensure it stays above other elements */
+    width: 50px;
+    height: 50px;
+    background-color: #333; /* Button background color */
+    color: white; /* Button text color */
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    opacity: 0.7; /* Slightly transparent */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#scroll-to-top:hover {
+    opacity: 1; /* Fully opaque on hover */
+    transform: scale(1.2); /* Slight zoom on hover */
+}
+
+#scroll-to-top:active {
+    transform: scale(1); /* Reset zoom on click */
 }
